@@ -21,6 +21,8 @@
 key-build*
 *.orig
 *.rej
+*.bak
+*.old
 *~
 .#*
 *#
@@ -31,4 +33,3 @@ git-src
 .cproject
 .ccache
 .vscode*
-*.bak
