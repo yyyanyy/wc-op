@@ -111,6 +111,9 @@ generate_network() {
 
 	[ -n "$ports" -a -z "$bridge" ] && {
 		uci -q batch <<-EOF
+			add network device
+			set network.@device[-1].name='br-$1'
+			set network.@device[-1].type='bridge'
 		EOF
 		for port in $ports; do uci add_list network.@device[-1].ports="$port"; done
 		[ -n "$macaddr" ] && {
@@ -159,14 +162,13 @@ generate_network() {
 		static)
 			local ipad
 			case "$1" in
-				lan) ipad=${ipaddr:-"192.168.1.2"} ;;
+				lan) ipad=${ipaddr:-"192.168.1.1"} ;;
 				*) ipad=${ipaddr:-"192.168.$((addr_offset++)).1"} ;;
 			esac
 
 			netm=${netmask:-"255.255.255.0"}
 
 			uci -q batch <<-EOF
-                set network.$1.device='$ports'
 				set network.$1.proto='static'
 				set network.$1.ipaddr='$ipad'
 				set network.$1.netmask='$netm'
